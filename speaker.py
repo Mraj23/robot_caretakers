@@ -234,19 +234,16 @@ def play_audio(frames):
 
 
 def menu():
-    print '--------------'
-    print 'Mobile Base'
-    print 'say "base forward" / "back" / "left" / "right"'
-    print
-    print 'Arm'
-    print 'say "arm up" / "down" / "in" / "out"'
-    print
-    print 'Head'
-    print 'say "ahead" / "back" / "tool" / "wheels"'
-    print
-    print 'System'
-    print 'CTRL + C : quit'
-    print '--------------'
+    print('--------------')
+    print('Mobile Base')
+    print('say "base forward" / "back" / "left" / "right"')
+    print('Arm')
+    print( 'say "arm up" / "down" / "in" / "out"')
+    print( 'Head')
+    print('say "ahead" / "back" / "tool" / "wheels"')
+    print('System')
+    print('CTRL + C : quit')
+    print('--------------')
 
 
 def move_robot(cmd):
@@ -299,15 +296,15 @@ def move_robot(cmd):
     robot.push_command()
 
     if not valid:
-        print "Unable to interpret: " + cmd
+        print("Unable to interpret: " + cmd)
     else:
-        print "Understood: " + cmd
+        print("Understood: " + cmd)
 
 
 if __name__ == "__main__":
     data_path = os.environ['HELLO_FLEET_PATH']
     if not os.path.isdir(os.path.join(data_path, "models/deepspeech-0.6.1-models/")):
-        print "Missing DeepSpeech model in stretch_user/"
+        print("Missing DeepSpeech model in stretch_user/")
 
     BEAM_WIDTH = 500
     LM_ALPHA = 0.75
@@ -327,15 +324,15 @@ if __name__ == "__main__":
             try:
                 if not printed_wait_statement and respeaker.is_voice() == 0:
                     menu()
-                    print "\n* waiting for audio..."
+                    print("\n* waiting for audio...")
                     printed_wait_statement = True
                 else:
                     if respeaker.is_voice() == 1:
-                        print "* recording 2 seconds"
+                        print("* recording 2 seconds")
                         frames = record_audio(seconds=2)
-                        print "* done"
+                        print("* done")
                         time.sleep(1)
-                        print "* analyzing"
+                        print("* analyzing")
                         stream_context = model.createStream()
                         # for i in range(12):
                         #     model.feedAudioContent(stream_context, np.frombuffer(frames[len(frames) - 1], np.int16))
@@ -344,7 +341,7 @@ if __name__ == "__main__":
                                 model.feedAudioContent(stream_context, np.frombuffer(f, np.int16))
                         text = model.finishStream(stream_context)
                         move_robot(text)
-                        print "* done"
+                        print("* done")
                         time.sleep(1)
                         printed_wait_statement = False
                     time.sleep(0.01)
