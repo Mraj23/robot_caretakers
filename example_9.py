@@ -112,6 +112,9 @@ class GetVoiceCommands:
         print('                                           ')
         print('-------------------------------------------')
         print(self.voice_command)
+        if self.voice_command:
+            if 'meter' in self.command_list or 'm' in self.command_list or 'M' in self.command_list:
+                print('I heard you say the word meter')
 
     def get_command(self):
         """
