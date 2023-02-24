@@ -76,6 +76,7 @@ class GetVoiceCommands:
         :returns inc: A dictionary type the contains the increment size.
         """
         translation = self.medium_translate
+        rotation = self.medium_rad
         if self.command_list:
             for s in self.command_list:
                 if s.isnumeric():
