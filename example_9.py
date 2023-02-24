@@ -3,6 +3,7 @@
 import math
 import rospy
 import sys
+import math
 
 from sensor_msgs.msg import JointState
 from std_msgs.msg import Int32
@@ -10,6 +11,7 @@ from control_msgs.msg import FollowJointTrajectoryGoal
 from trajectory_msgs.msg import JointTrajectoryPoint
 import hello_helpers.hello_misc as hm
 from speech_recognition_msgs.msg import SpeechRecognitionCandidates
+
 
 class GetVoiceCommands:
     """
@@ -79,11 +81,15 @@ class GetVoiceCommands:
                 if s.isnumeric():
                     translation = int(s)
         
-        if 'meter' not in self.command_list or 'm' not in self.command_list or 'M' not in self.command_list:
-            translation = translation/100
+        if 'meter' in self.command_list or 'm' in self.command_list or 'M' in self.command_list:
+            translation = translation*100
 
-        
-        inc = {'rad': self.small_rad, 'translate': translation}
+
+        if 'degrees' in self.command_list:
+            rotation = translation*math.pi/180
+
+
+        inc = {'rad': rotation, 'translate': translation}
         
         return inc
 
@@ -112,7 +118,8 @@ class GetVoiceCommands:
         print('                                           ')
         print('-------------------------------------------')
         print(self.voice_command)
-        if self.voice_command:
+        print(self.command_list)
+        if self.command_list:
             if 'meter' in self.command_list or 'm' in self.command_list or 'M' in self.command_list:
                 print('I heard you say the word meter')
 
