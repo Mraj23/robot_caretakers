@@ -39,6 +39,7 @@ class GetVoiceCommands:
         self.big_translate = 0.1
 
         self.voice_command = None
+        self.command_list = None
         self.sound_direction = 0
         self.speech_to_text_sub  = rospy.Subscriber("/speech_to_text",  SpeechRecognitionCandidates, self.callback_speech)
         self.sound_direction_sub = rospy.Subscriber("/sound_direction", Int32,                       self.callback_direction)
@@ -60,6 +61,9 @@ class GetVoiceCommands:
         :param msg: The SpeechRecognitionCandidates message type.
         """
         self.voice_command = ' '.join(map(str,msg.transcript))
+        print(self.voice_command)
+        self.command_list = self.voice_command.split(" ")
+
 
     def get_inc(self):
         """
@@ -109,6 +113,7 @@ class GetVoiceCommands:
 
         :returns command: A dictionary type that contains the type of base motion.
         """
+        # if forward
         command = None
         if self.voice_command == 'forward':
             command = {'joint': 'translate_mobile_base', 'inc': self.get_inc()['translate']}
