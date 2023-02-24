@@ -119,16 +119,15 @@ class GetVoiceCommands:
         # if forward
 
         command = None
-        if 'forward' in self.command_list:
-            command = {'joint': 'translate_mobile_base', 'inc': self.get_inc()['translate']}
-        if 'back' in self.command_list:
-            command = {'joint': 'translate_mobile_base', 'inc': -self.get_inc()['translate']}
-        if 'left' in self.command_list:
-            command = {'joint': 'rotate_mobile_base', 'inc': self.get_inc()['rad']}
-        if 'right' in self.command_list:
-            command = {'joint': 'rotate_mobile_base', 'inc': -self.get_inc()['rad']}
-        if self.voice_command == 'stretch':
-            command = {'joint': 'rotate_mobile_base', 'inc': self.sound_direction}
+        if self.voice_command:
+            if 'forward' in self.command_list:
+                command = {'joint': 'translate_mobile_base', 'inc': self.get_inc()['translate']}
+            if 'back' in self.command_list:
+                command = {'joint': 'translate_mobile_base', 'inc': -self.get_inc()['translate']}
+            if 'left' in self.command_list:
+                command = {'joint': 'rotate_mobile_base', 'inc': self.get_inc()['rad']}
+            if 'right' in self.command_list:
+                command = {'joint': 'rotate_mobile_base', 'inc': -self.get_inc()['rad']}
 
         '''if (self.voice_command == "small") or (self.voice_command == "medium") or (self.voice_command == "big"):
             self.step_size = self.voice_command
