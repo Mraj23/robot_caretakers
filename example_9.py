@@ -79,7 +79,7 @@ class GetVoiceCommands:
                 if s.isnumeric():
                     translation = int(s)
         
-        if 'm' not in self.command_list or 'M' not in self.command_list:
+        if 'meter' not in self.command_list or 'm' not in self.command_list or 'M' not in self.command_list:
             translation = translation/100
 
         
