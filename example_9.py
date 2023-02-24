@@ -105,6 +105,7 @@ class GetVoiceCommands:
         print(' "quit"   : QUIT AND CLOSE NODE            ')
         print('                                           ')
         print('-------------------------------------------')
+        print(self.voice_command)
 
     def get_command(self):
         """
