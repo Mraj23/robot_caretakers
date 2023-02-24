@@ -88,6 +88,7 @@ class GetVoiceCommands:
 
 
         if 'rotate' in self.command_list:
+            translation *= 100
             rotation = translation*math.pi/180
 
 
