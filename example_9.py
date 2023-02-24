@@ -73,12 +73,14 @@ class GetVoiceCommands:
 
         :returns inc: A dictionary type the contains the increment size.
         """
-        if self.step_size == 'small':
-            inc = {'rad': self.small_rad, 'translate': self.small_translate}
-        if self.step_size == 'medium':
-            inc = {'rad': self.medium_rad, 'translate': self.medium_translate}
-        if self.step_size == 'big':
-            inc = {'rad': self.big_rad, 'translate': self.big_translate}
+        translation = self.medium_translate
+        if self.command_list:
+            for s in self.command_list:
+                if s.isnumeric():
+                    translation = int(s)
+        
+        inc = {'rad': self.small_rad, 'translate': translation}
+        
         return inc
 
     def print_commands(self):
@@ -115,25 +117,29 @@ class GetVoiceCommands:
         :returns command: A dictionary type that contains the type of base motion.
         """
         # if forward
+
         command = None
-        if self.voice_command == 'forward':
+        if 'forward' in self.command_list:
             command = {'joint': 'translate_mobile_base', 'inc': self.get_inc()['translate']}
-        if self.voice_command == 'back':
+        if 'back' in self.command_list:
             command = {'joint': 'translate_mobile_base', 'inc': -self.get_inc()['translate']}
-        if self.voice_command == 'left':
+        if 'left' in self.command_list:
             command = {'joint': 'rotate_mobile_base', 'inc': self.get_inc()['rad']}
-        if self.voice_command == 'right':
+        if 'right' in self.command_list:
             command = {'joint': 'rotate_mobile_base', 'inc': -self.get_inc()['rad']}
         if self.voice_command == 'stretch':
             command = {'joint': 'rotate_mobile_base', 'inc': self.sound_direction}
-        if (self.voice_command == "small") or (self.voice_command == "medium") or (self.voice_command == "big"):
+
+        '''if (self.voice_command == "small") or (self.voice_command == "medium") or (self.voice_command == "big"):
             self.step_size = self.voice_command
-            rospy.loginfo('Step size = {0}'.format(self.step_size))
+            rospy.loginfo('Step size = {0}'.format(self.step_size))'''
+
         if self.voice_command == 'quit':
             rospy.signal_shutdown("done")
             sys.exit(0)
 
         self.voice_command = None
+        self.command_list = None
         return command
 
 
