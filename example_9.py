@@ -159,9 +159,9 @@ class GetVoiceCommands:
             
             if 'lift' in self.command_list:
                 if 'up' in self.command_list:
-                    command = {'joint': 'joint_lift', 'inc': self.get_inc()['translate']}
-                if 'down' in self.command_list:
                     command = {'joint': 'joint_lift', 'inc': -self.get_inc()['translate']}
+                if 'down' in self.command_list:
+                    command = {'joint': 'joint_lift', 'inc': self.get_inc()['translate']}
             
             if 'wrist' in self.command_list:
                 if 'up' in self.command_list:
@@ -246,11 +246,10 @@ class VoiceTeleopNode(hm.HelloNode):
             new_value = inc
 
             joint_name = command['joint']
-            if joint_name == 'lift':
-               
+            if joint_name == 'joint_lift':
                 with self.joint_states_lock: 
-                    i = self.joint_states.name.index('joint_lift')
-                    lift_position = self.joint_states.position[i]
+                    i = self.joint_state.name.index('joint_lift')
+                    lift_position = self.joint_state.position[i]
                 new_lift_position = lift_position - new_value
                 pose = {'joint_lift': new_lift_position}
                 self.move_to_pose(pose) 
