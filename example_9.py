@@ -137,15 +137,38 @@ class GetVoiceCommands:
 
         command = None
         if self.voice_command and self.command_list:
-            if 'forward' in self.command_list:
-                command = {'joint': 'translate_mobile_base', 'inc': self.get_inc()['translate']}
-            if 'back' in self.command_list:
-                command = {'joint': 'translate_mobile_base', 'inc': -self.get_inc()['translate']}
-            if 'left' in self.command_list:
-                command = {'joint': 'rotate_mobile_base', 'inc': self.get_inc()['rad']}
-            if 'right' in self.command_list:
-                command = {'joint': 'rotate_mobile_base', 'inc': -self.get_inc()['rad']}
+            if 'base' in self.command_list:
+                if 'forward' in self.command_list:
+                    command = {'joint': 'translate_mobile_base', 'inc': self.get_inc()['translate']}
+                if 'back' in self.command_list:
+                    command = {'joint': 'translate_mobile_base', 'inc': -self.get_inc()['translate']}
+                if 'left' in self.command_list:
+                    command = {'joint': 'rotate_mobile_base', 'inc': self.get_inc()['rad']}
+                if 'right' in self.command_list:
+                    command = {'joint': 'rotate_mobile_base', 'inc': -self.get_inc()['rad']}
 
+            if 'arm' in self.command_list:
+                if 'in' in self.command_list:
+                    command = {'joint': 'wrist_extension', 'inc': -self.get_inc()['translate']}
+                if 'out' in self.command_list:
+                    command = {'joint': 'wrist_extension', 'inc': self.get_inc()['translate']}
+            
+            if 'lift' in self.command_list:
+                if 'up' in self.command_list:
+                    command = {'joint': 'joint_lift', 'inc': self.get_inc()['translate']}
+                if 'down' in self.command_list:
+                    command = {'joint': 'joint_lift', 'inc': -self.get_inc()['translate']}
+            
+            if 'wrist' in self.command_list:
+                if 'up' in self.command_list:
+                    command = {'joint': 'wrist', 'inc': self.get_inc()['translate']}
+                if 'down' in self.command_list:
+                    command = {'joint': 'wrist', 'inc': -self.get_inc()['translate']}
+                if 'left' in self.command_list:
+                    command = {'joint': 'wrist', 'inc': self.get_inc()['translate']}
+                if 'right' in self.command_list:
+                    command = {'joint': 'wrist', 'inc': -self.get_inc()['translate']}
+        
         '''if (self.voice_command == "small") or (self.voice_command == "medium") or (self.voice_command == "big"):
             self.step_size = self.voice_command
             rospy.loginfo('Step size = {0}'.format(self.step_size))'''
@@ -191,6 +214,7 @@ class VoiceTeleopNode(hm.HelloNode):
         """
         joint_state = self.joint_state
         if (joint_state is not None) and (command is not None):
+
             point = JointTrajectoryPoint()
             point.time_from_start = rospy.Duration(0.0)
             trajectory_goal = FollowJointTrajectoryGoal()
@@ -209,6 +233,7 @@ class VoiceTeleopNode(hm.HelloNode):
             self.trajectory_client.send_goal(trajectory_goal)
             rospy.loginfo('Done sending command.')
             self.speech.print_commands()
+
 
     def main(self):
         """
