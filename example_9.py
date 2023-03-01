@@ -150,7 +150,7 @@ class GetVoiceCommands:
                 if 'right' in self.command_list:
                     command = {'joint': 'rotate_mobile_base', 'inc': -self.get_inc()['rad']}
 
-            if 'arm' in self.command_list:
+            if 'I\'m' or 'arm' in self.command_list:
                 if 'retract' in self.command_list:
                     command = {'joint': 'wrist_extension', 'inc': -self.get_inc()['translate']}
                 if 'extend' in self.command_list:
