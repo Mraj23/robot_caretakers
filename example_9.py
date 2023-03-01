@@ -169,7 +169,7 @@ class GetVoiceCommands:
                 if 'down' in self.command_list:
                     command = {'joint': 'joint_lift', 'inc': self.get_inc()['translate']}
 
-            if 'wrist' in self.command_list:
+            if 'wrist' or 'rest' or 'risk' in self.command_list:
                 if 'up' in self.command_list:
                     command = {'joint': 'wrist_up', 'inc': self.get_inc()['rad']}
                 if 'down' in self.command_list:
