@@ -45,6 +45,8 @@ class GetVoiceCommands:
         self.big_rad = self.rad_per_deg * self.big_deg
         self.big_translate = 0.1
 
+        self.aperture = self.open_aperture
+
         self.voice_command = None
         self.command_list = None
         self.sound_direction = 0
@@ -82,6 +84,7 @@ class GetVoiceCommands:
         """
         translation = self.medium_translate
         rotation = self.medium_rad
+        aperture = self.open_aperture
         if self.command_list:
             for s in self.command_list:
                 if s.isnumeric():
@@ -91,13 +94,18 @@ class GetVoiceCommands:
         if 'meter' in self.command_list or 'm' in self.command_list or 'M' in self.command_list:
             translation = translation*100
 
-
         if 'rotate' in self.command_list:
             translation *= 100
             rotation = translation*math.pi/180
 
+        if 'open' in self.command_list:
+            aperture = 0.125
+        
+        if 'close' in self.command_list:
+            aperture = 0.05
 
-        inc = {'rad': rotation, 'translate': translation}
+
+        inc = {'rad': rotation, 'translate': translation, 'aperture':aperture}
 
         return inc
 
@@ -172,6 +180,9 @@ class GetVoiceCommands:
                 if 'right' in self.command_list:
                     command = {'joint': 'wrist', 'inc': -self.get_inc()['translate']}
 
+            if 'grip' in self.command_list:
+                command = {'joint': 'grip', 'inc': self.get_inc()['aperture']}
+               
         '''if (self.voice_command == "small") or (self.voice_command == "medium") or (self.voice_command == "big"):
             self.step_size = self.voice_command
             rospy.loginfo('Step size = {0}'.format(self.step_size))'''
@@ -254,7 +265,11 @@ class VoiceTeleopNode(hm.HelloNode):
                 extension_contact_effort = 45.0
                 pose = {'wrist_extension': (extension_m, extension_contact_effort)}
                 self.move_to_pose(pose, custom_contact_thresholds=True)
-
+            
+            if joint_name == 'grip':
+                pose = {'gripper_aperture': new_value}
+                self.move_to_pose(pose)
+            
 
     def main(self):
         """
