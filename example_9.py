@@ -12,6 +12,7 @@ from std_msgs.msg import Int32
 from control_msgs.msg import FollowJointTrajectoryGoal
 from trajectory_msgs.msg import JointTrajectoryPoint
 import hello_helpers.hello_misc as hm
+import stretch_funmap.navigate as nv
 from speech_recognition_msgs.msg import SpeechRecognitionCandidates
 
 
@@ -202,6 +203,8 @@ class VoiceTeleopNode(hm.HelloNode):
         self.joint_state = None
         self.joint_states_lock = threading.Lock()
         self.speech = GetVoiceCommands()
+        self.move_base = nv.MoveBase(self)
+
 
     def joint_states_callback(self, msg):
         """
@@ -220,32 +223,18 @@ class VoiceTeleopNode(hm.HelloNode):
         joint_state = self.joint_state
         if (joint_state is not None) and (command is not None):
 
-            '''point = JointTrajectoryPoint()
-            point.time_from_start = rospy.Duration(0.0)
-            trajectory_goal = FollowJointTrajectoryGoal()
-            trajectory_goal.goal_time_tolerance = rospy.Time(1.0)
-            joint_name = command['joint']
-            trajectory_goal.trajectory.joint_names = [joint_name]
-
-            print("THIS IS THE JOINT STATE", joint_state)
-
             inc = command['inc']
             rospy.loginfo('inc = {0}'.format(inc))
             new_value = inc
-
-            point.positions = [new_value]
-            trajectory_goal.trajectory.points = [point]
-            trajectory_goal.trajectory.header.stamp = rospy.Time.now()
-            rospy.loginfo('joint_name = {0}, trajectory_goal = {1}'.format(joint_name, trajectory_goal))
-            self.trajectory_client.send_goal(trajectory_goal)
-            rospy.loginfo('Done sending command.')
-            self.speech.print_commands()'''
-
-            inc = command['inc']
-            rospy.loginfo('inc = {0}'.format(inc))
-            new_value = inc
-
             joint_name = command['joint']
+
+            if joint_name == 'translate_mobile_base' or joint_name == 'rotate_mobile_base':
+                if inc > 0: 
+                    at_goal = self.move_base.forward(inc, detect_obstacles=False)
+                else:
+                    at_goal = self.move_base.backward(inc, detect_obstacles=False)
+            rospy.sleep(1.0)
+
             if joint_name == 'joint_lift':
                 with self.joint_states_lock: 
                     i = self.joint_state.name.index('joint_lift')
@@ -253,6 +242,7 @@ class VoiceTeleopNode(hm.HelloNode):
                 new_lift_position = lift_position - new_value
                 pose = {'joint_lift': new_lift_position}
                 self.move_to_pose(pose) 
+            
 
 
     def main(self):
