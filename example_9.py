@@ -138,8 +138,6 @@ class GetVoiceCommands:
 
         :returns command: A dictionary type that contains the type of base motion.
         """
-        # if forward
-
         command = None
         if self.voice_command and self.command_list:
             if 'base' in self.command_list:
@@ -184,6 +182,7 @@ class GetVoiceCommands:
 
         self.voice_command = None
         self.command_list = None
+        
         return command
 
 
@@ -228,12 +227,14 @@ class VoiceTeleopNode(hm.HelloNode):
             new_value = inc
             joint_name = command['joint']
 
-            if joint_name == 'translate_mobile_base' or joint_name == 'rotate_mobile_base':
-                if inc > 0: 
-                    at_goal = self.move_base.forward(inc, detect_obstacles=False)
-                else:
-                    at_goal = self.move_base.backward(inc, detect_obstacles=False)
-            rospy.sleep(1.0)
+            if joint_name == 'translate_mobile_base':
+                pose = {'translate_mobile_base': new_value}
+                self.move_to_pose(pose)
+                rospy.sleep(1.0)
+
+            if joint_name == 'rotate_mobile_base':
+                pose = {'rotate_mobile_base': new_value}
+                rospy.sleep(1.0)
 
             if joint_name == 'joint_lift':
                 with self.joint_states_lock:
@@ -245,7 +246,6 @@ class VoiceTeleopNode(hm.HelloNode):
             
             if joint_name == 'wrist_extension':
                 max_extension_m = 0.5
-
                 with self.joint_states_lock:
                     wrist_position, wrist_velocity, wrist_effort = hm.get_wrist_state(self.joint_state)
                 extension_m = wrist_position + new_value
@@ -253,10 +253,6 @@ class VoiceTeleopNode(hm.HelloNode):
                 extension_contact_effort = 45.0
                 pose = {'wrist_extension': (extension_m, extension_contact_effort)}
                 self.move_to_pose(pose, custom_contact_thresholds=True)
-
-
-
-
 
 
     def main(self):
