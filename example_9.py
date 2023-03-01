@@ -99,7 +99,7 @@ class GetVoiceCommands:
             rotation = translation*math.pi/180
 
         if 'open' in self.command_list:
-            aperture = 0.125
+            aperture = 0.3
         
         if 'close' in self.command_list:
             aperture = 0.05
