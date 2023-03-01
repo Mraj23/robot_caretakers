@@ -258,12 +258,14 @@ class VoiceTeleopNode(hm.HelloNode):
                 max_extension_m = 0.5
 
                 with self.joint_states_lock:
-                    wrist_position, wrist_velocity, wrist_effort = hm.get_wrist_state(self.joint_states)
+                    wrist_position, wrist_velocity, wrist_effort = hm.get_wrist_state(self.joint_state)
                 extension_m = wrist_position + new_value
                 extension_m = min(extension_m, max_extension_m)
                 extension_contact_effort = 45.0
                 pose = {'wrist_extension': (extension_m, extension_contact_effort)}
                 self.move_to_pose(pose, custom_contact_thresholds=True)
+
+
 
 
 
