@@ -84,7 +84,7 @@ class GetVoiceCommands:
         """
         translation = self.medium_translate
         rotation = self.medium_rad
-        aperture = self.open_aperture
+        aperture = self.aperture
         if self.command_list:
             for s in self.command_list:
                 if s.isnumeric():
