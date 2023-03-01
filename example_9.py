@@ -5,7 +5,7 @@ import rospy
 import sys
 import math
 import actionlib
-
+import threading
 
 from sensor_msgs.msg import JointState
 from std_msgs.msg import Int32
@@ -13,6 +13,7 @@ from control_msgs.msg import FollowJointTrajectoryGoal
 from trajectory_msgs.msg import JointTrajectoryPoint
 import hello_helpers.hello_misc as hm
 from speech_recognition_msgs.msg import SpeechRecognitionCandidates
+
 
 
 
@@ -199,6 +200,7 @@ class VoiceTeleopNode(hm.HelloNode):
         hm.HelloNode.__init__(self)
         self.rate = 10.0
         self.joint_state = None
+        self.joint_states_lock = threading.Lock()
         self.speech = GetVoiceCommands()
 
     def joint_states_callback(self, msg):
