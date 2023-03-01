@@ -182,7 +182,7 @@ class GetVoiceCommands:
 
         self.voice_command = None
         self.command_list = None
-        
+
         return command
 
 
@@ -234,6 +234,7 @@ class VoiceTeleopNode(hm.HelloNode):
 
             if joint_name == 'rotate_mobile_base':
                 pose = {'rotate_mobile_base': new_value}
+                self.move_to_pose(pose)
                 rospy.sleep(1.0)
 
             if joint_name == 'joint_lift':
