@@ -82,7 +82,7 @@ class GetVoiceCommands:
                 if s.isnumeric():
                     translation = int(s)
         
-        translation = translation /100
+        translation = translation/100
         if 'meter' in self.command_list or 'm' in self.command_list or 'M' in self.command_list:
             translation = translation*100
 
@@ -215,12 +215,14 @@ class VoiceTeleopNode(hm.HelloNode):
         joint_state = self.joint_state
         if (joint_state is not None) and (command is not None):
 
-            point = JointTrajectoryPoint()
+            '''point = JointTrajectoryPoint()
             point.time_from_start = rospy.Duration(0.0)
             trajectory_goal = FollowJointTrajectoryGoal()
             trajectory_goal.goal_time_tolerance = rospy.Time(1.0)
             joint_name = command['joint']
             trajectory_goal.trajectory.joint_names = [joint_name]
+
+            print("THIS IS THE JOINT STATE", joint_state)
 
             inc = command['inc']
             rospy.loginfo('inc = {0}'.format(inc))
@@ -232,7 +234,21 @@ class VoiceTeleopNode(hm.HelloNode):
             rospy.loginfo('joint_name = {0}, trajectory_goal = {1}'.format(joint_name, trajectory_goal))
             self.trajectory_client.send_goal(trajectory_goal)
             rospy.loginfo('Done sending command.')
-            self.speech.print_commands()
+            self.speech.print_commands()'''
+
+            inc = command['inc']
+            rospy.loginfo('inc = {0}'.format(inc))
+            new_value = inc
+
+            joint_name = command['joint']
+            if joint_name == 'lift':
+               
+                with self.joint_states_lock: 
+                    i = self.joint_states.name.index('joint_lift')
+                    lift_position = self.joint_states.position[i]
+                new_lift_position = lift_position - new_value
+                pose = {'joint_lift': new_lift_position}
+                self.move_to_pose(pose) 
 
 
     def main(self):
