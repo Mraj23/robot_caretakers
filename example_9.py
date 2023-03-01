@@ -151,9 +151,9 @@ class GetVoiceCommands:
                     command = {'joint': 'rotate_mobile_base', 'inc': -self.get_inc()['rad']}
 
             if 'arm' in self.command_list:
-                if 'in' in self.command_list:
+                if 'retract' in self.command_list:
                     command = {'joint': 'wrist_extension', 'inc': -self.get_inc()['translate']}
-                if 'out' in self.command_list:
+                if 'extend' in self.command_list:
                     command = {'joint': 'wrist_extension', 'inc': self.get_inc()['translate']}
 
             if 'lift' in self.command_list:
@@ -244,7 +244,7 @@ class VoiceTeleopNode(hm.HelloNode):
                 new_lift_position = lift_position - new_value
                 pose = {'joint_lift': new_lift_position}
                 self.move_to_pose(pose)
-            
+
             if joint_name == 'wrist_extension':
                 max_extension_m = 0.5
                 with self.joint_states_lock:
