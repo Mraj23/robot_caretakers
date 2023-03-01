@@ -179,10 +179,10 @@ class GetVoiceCommands:
                     command = {'joint': 'wrist', 'inc': self.get_inc()['translate']}
                 if 'right' in self.command_list:
                     command = {'joint': 'wrist', 'inc': -self.get_inc()['translate']}
-                if 'counter' in self.command_list:
-                    command = {'joint': 'wrist', 'inc': -self.get_inc()['rad']}
-                if 'counter' not in self.command_list:
-                    command = {'joint': 'wrist', 'inc': self.get_inc()['rad']}
+            if 'counter' in self.command_list:
+                command = {'joint': 'wrist', 'inc': -self.get_inc()['rad']}
+            elif 'clockwise' in self.command_list:
+                command = {'joint': 'wrist', 'inc': self.get_inc()['rad']}
 
             if 'grip' in self.command_list:
                 command = {'joint': 'grip', 'inc': self.get_inc()['aperture']}
