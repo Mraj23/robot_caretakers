@@ -100,7 +100,7 @@ class GetVoiceCommands:
 
         if 'open' in self.command_list:
             aperture = 0.3
-        
+
         if 'close' in self.command_list:
             aperture = 0.05
 
@@ -179,10 +179,16 @@ class GetVoiceCommands:
                     command = {'joint': 'wrist', 'inc': self.get_inc()['translate']}
                 if 'right' in self.command_list:
                     command = {'joint': 'wrist', 'inc': -self.get_inc()['translate']}
+                if 'counter' in self.command_list:
+                    command = {'joint': 'wrist', 'inc': -self.get_inc()['rad']}
+                if 'counter' not in self.command_list:
+                    command = {'joint': 'wrist', 'inc': self.get_inc()['rad']}
 
             if 'grip' in self.command_list:
                 command = {'joint': 'grip', 'inc': self.get_inc()['aperture']}
-               
+
+
+
         '''if (self.voice_command == "small") or (self.voice_command == "medium") or (self.voice_command == "big"):
             self.step_size = self.voice_command
             rospy.loginfo('Step size = {0}'.format(self.step_size))'''
@@ -265,11 +271,14 @@ class VoiceTeleopNode(hm.HelloNode):
                 extension_contact_effort = 45.0
                 pose = {'wrist_extension': (extension_m, extension_contact_effort)}
                 self.move_to_pose(pose, custom_contact_thresholds=True)
-            
+
             if joint_name == 'grip':
                 pose = {'gripper_aperture': new_value}
                 self.move_to_pose(pose)
-            
+
+            if joint_name == 'wrist':
+                pose = {'joint_wrist_yaw': new_value}
+                self.move_to_pose(pose)
 
     def main(self):
         """
