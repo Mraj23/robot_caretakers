@@ -45,7 +45,7 @@ class GetVoiceCommands:
         self.big_rad = self.rad_per_deg * self.big_deg
         self.big_translate = 0.1
 
-        self.aperture = self.open_aperture
+        self.aperture = 0.125
 
         self.voice_command = None
         self.command_list = None
