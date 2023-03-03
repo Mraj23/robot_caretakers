@@ -94,7 +94,9 @@ class GetVoiceCommands:
         if 'meter' in self.command_list or 'm' in self.command_list or 'M' in self.command_list:
             translation = translation*100
 
-        rotation = translation*100*math.pi/180
+        if 'rotate' in self.command_list:
+            translation *= 100
+            rotation = translation*math.pi/180
 
         if 'open' in self.command_list:
             aperture = 0.3
@@ -168,20 +170,19 @@ class GetVoiceCommands:
                 if 'down' in self.command_list:
                     command = {'joint': 'joint_lift', 'inc': self.get_inc()['translate']}
 
-            if 'wrist' or 'rest' or 'risk' in self.command_list:
+            if 'wrist' in self.command_list:
                 if 'up' in self.command_list:
-                    command = {'joint': 'wrist_up', 'inc': self.get_inc()['rad']}
+                    command = {'joint': 'wrist', 'inc': self.get_inc()['translate']}
                 if 'down' in self.command_list:
-                    command = {'joint': 'wrist_up', 'inc': -self.get_inc()['rad']}
+                    command = {'joint': 'wrist', 'inc': -self.get_inc()['translate']}
                 if 'left' in self.command_list:
-                    command = {'joint': 'wrist_left', 'inc': self.get_inc()['rad']}
+                    command = {'joint': 'wrist', 'inc': self.get_inc()['translate']}
                 if 'right' in self.command_list:
-                    command = {'joint': 'wrist_left', 'inc': -self.get_inc()['rad']}
-
+                    command = {'joint': 'wrist', 'inc': -self.get_inc()['translate']}
                 if 'counter' in self.command_list:
-                    command = {'joint': 'wrist_rotate', 'inc': -self.get_inc()['rad']}
-                if 'twist' or 'roll' in self.command_list:
-                    command = {'joint': 'wrist_rotate', 'inc': self.get_inc()['rad']}
+                    command = {'joint': 'wrist', 'inc': -self.get_inc()['rad']}
+                if 'counter' not in self.command_list:
+                    command = {'joint': 'wrist', 'inc': self.get_inc()['rad']}
 
             if 'grip' in self.command_list:
                 command = {'joint': 'grip', 'inc': self.get_inc()['aperture']}
@@ -275,16 +276,8 @@ class VoiceTeleopNode(hm.HelloNode):
                 pose = {'gripper_aperture': new_value}
                 self.move_to_pose(pose)
 
-            if joint_name == 'wrist_up':
-                pose = {'joint_wrist_pitch': new_value}
-                self.move_to_pose(pose)
-
-            if joint_name == 'wrist_left':
+            if joint_name == 'wrist':
                 pose = {'joint_wrist_yaw': new_value}
-                self.move_to_pose(pose)
-
-            if joint_name == 'wrist_rotate':
-                pose = {'joint_wrist_roll': new_value}
                 self.move_to_pose(pose)
 
     def main(self):
