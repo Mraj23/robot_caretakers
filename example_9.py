@@ -145,7 +145,7 @@ class GetVoiceCommands:
         """
         command = None
         if self.voice_command and self.command_list:
-            if 'base' in self.command_list:
+            if ('base' in self.command_list) or ('face' in self.command_list):
                 if 'forward' in self.command_list:
                     command = {'joint': 'translate_mobile_base', 'inc': self.get_inc()['translate']}
                 if 'back' in self.command_list:
@@ -167,7 +167,7 @@ class GetVoiceCommands:
                 if 'down' in self.command_list:
                     command = {'joint': 'joint_lift', 'inc': self.get_inc()['translate']}
 
-            if 'wrist' in self.command_list:
+            if ('wrist' in self.command_list) or ('rest' in self.command_list):
                 if 'up' in self.command_list:
                     command = {'joint': 'wrist_pitch', 'inc': self.get_inc()['rad']}
                 if 'down' in self.command_list:
@@ -181,7 +181,7 @@ class GetVoiceCommands:
                 if 'counter' not in self.command_list:
                     command = {'joint': 'wrist_roll', 'inc': self.get_inc()['rad']}
 
-            if 'grip' in self.command_list:
+            if ('grip' in self.command_list) or ('rip' in self.command_list):
                 command = {'joint': 'grip', 'inc': self.get_inc()['aperture']}
 
 
