@@ -281,7 +281,7 @@ class VoiceTeleopNode(hm.HelloNode):
                 pose = {'joint_wrist_yaw': new_value}
                 self.move_to_pose(pose)
             
-            if joint_name == 'roll':
+            if joint_name == 'wrist_roll':
                 pose = {'joint_wrist_roll': new_value}
                 self.move_to_pose(pose)
 
