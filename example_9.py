@@ -169,17 +169,17 @@ class GetVoiceCommands:
 
             if 'wrist' in self.command_list:
                 if 'up' in self.command_list:
-                    command = {'joint': 'wrist', 'inc': self.get_inc()['translate']}
+                    command = {'joint': 'wrist_pitch', 'inc': self.get_inc()['translate']}
                 if 'down' in self.command_list:
-                    command = {'joint': 'wrist', 'inc': -self.get_inc()['translate']}
+                    command = {'joint': 'wrist_pitch', 'inc': -self.get_inc()['translate']}
                 if 'left' in self.command_list:
-                    command = {'joint': 'wrist', 'inc': self.get_inc()['translate']}
+                    command = {'joint': 'wrist_yaw', 'inc': self.get_inc()['translate']}
                 if 'right' in self.command_list:
-                    command = {'joint': 'wrist', 'inc': -self.get_inc()['translate']}
+                    command = {'joint': 'wrist_yaw', 'inc': -self.get_inc()['translate']}
                 if 'counter' in self.command_list:
-                    command = {'joint': 'wrist', 'inc': -self.get_inc()['rad']}
+                    command = {'joint': 'wrist_roll', 'inc': -self.get_inc()['rad']}
                 if 'counter' not in self.command_list:
-                    command = {'joint': 'wrist', 'inc': self.get_inc()['rad']}
+                    command = {'joint': 'wrist_roll', 'inc': self.get_inc()['rad']}
 
             if 'grip' in self.command_list:
                 command = {'joint': 'grip', 'inc': self.get_inc()['aperture']}
@@ -273,8 +273,16 @@ class VoiceTeleopNode(hm.HelloNode):
                 pose = {'gripper_aperture': new_value}
                 self.move_to_pose(pose)
 
-            if joint_name == 'wrist':
+            if joint_name == 'wrist_pitch':
+                pose = {'joint_wrist_pitch': new_value}
+                self.move_to_pose(pose)
+            
+            if joint_name == 'wrist_yaw':
                 pose = {'joint_wrist_yaw': new_value}
+                self.move_to_pose(pose)
+            
+            if joint_name == 'roll':
+                pose = {'joint_wrist_roll': new_value}
                 self.move_to_pose(pose)
 
     def main(self):
