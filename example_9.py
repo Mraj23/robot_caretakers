@@ -94,10 +94,7 @@ class GetVoiceCommands:
         if 'meter' in self.command_list or 'm' in self.command_list or 'M' in self.command_list:
             translation = translation*100
 
-        if 'rotate' in self.command_list:
-            translation *= 100
-            rotation = translation*math.pi/180
-
+        rotation = translation*100*math.pi/180
         if 'open' in self.command_list:
             aperture = 0.3
 
