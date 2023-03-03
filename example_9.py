@@ -146,7 +146,7 @@ class GetVoiceCommands:
         command = None
         if self.voice_command and self.command_list:
             if ('base' in self.command_list) or ('face' in self.command_list) or ('space' in self.command_list) or ('Face' in self.command_list):
-                if 'forward' in self.command_list:
+                if ('forward' in self.command_list) or ('Forward' in self.command_list):
                     command = {'joint': 'translate_mobile_base', 'inc': self.get_inc()['translate']}
                 if 'back' in self.command_list:
                     command = {'joint': 'translate_mobile_base', 'inc': -self.get_inc()['translate']}
