@@ -273,8 +273,12 @@ class VoiceTeleopNode(hm.HelloNode):
                 self.move_to_pose(pose, custom_contact_thresholds=True)
 
             if joint_name == 'grip':
-                pose = {'gripper_aperture': new_value}
-                self.move_to_pose(pose)
+                #pose = {'gripper_aperture': new_value}
+                #self.move_to_pose(pose)
+                import strech_body.robot
+                robot = strech_body.robot.Robot()
+                #robot.startup()
+                robot.end_of_arm.move_to('stretch_gripper', 50)
 
             if joint_name == 'wrist_up':
                 pose = {'joint_wrist_pitch': new_value}
