@@ -277,7 +277,7 @@ class VoiceTeleopNode(hm.HelloNode):
                 #self.move_to_pose(pose)
                 import stretch_body.robot
                 robot = stretch_body.robot.Robot()
-                #robot.startup()
+                robot.startup()
                 robot.end_of_arm.move_to('stretch_gripper', 50)
 
             if joint_name == 'wrist_up':
