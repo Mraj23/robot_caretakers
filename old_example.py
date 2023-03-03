@@ -3,20 +3,13 @@
 import math
 import rospy
 import sys
-import math
-import actionlib
-import threading
 
 from sensor_msgs.msg import JointState
 from std_msgs.msg import Int32
 from control_msgs.msg import FollowJointTrajectoryGoal
 from trajectory_msgs.msg import JointTrajectoryPoint
 import hello_helpers.hello_misc as hm
-import stretch_funmap.navigate as nv
 from speech_recognition_msgs.msg import SpeechRecognitionCandidates
-
-
-
 
 class GetVoiceCommands:
     """
@@ -45,10 +38,7 @@ class GetVoiceCommands:
         self.big_rad = self.rad_per_deg * self.big_deg
         self.big_translate = 0.1
 
-        self.aperture = 0.125
-
         self.voice_command = None
-        self.command_list = None
         self.sound_direction = 0
         self.speech_to_text_sub  = rospy.Subscriber("/speech_to_text",  SpeechRecognitionCandidates, self.callback_speech)
         self.sound_direction_sub = rospy.Subscriber("/sound_direction", Int32,                       self.callback_direction)
@@ -70,9 +60,6 @@ class GetVoiceCommands:
         :param msg: The SpeechRecognitionCandidates message type.
         """
         self.voice_command = ' '.join(map(str,msg.transcript))
-        print(self.voice_command)
-        self.command_list = self.voice_command.split(" ")
-
 
     def get_inc(self):
         """
@@ -82,30 +69,12 @@ class GetVoiceCommands:
 
         :returns inc: A dictionary type the contains the increment size.
         """
-        translation = self.medium_translate
-        rotation = self.medium_rad
-        aperture = self.aperture
-        if self.command_list:
-            for s in self.command_list:
-                if s.isnumeric():
-                    translation = int(s)
-
-        translation = translation/100
-        if 'meter' in self.command_list or 'm' in self.command_list or 'M' in self.command_list:
-            translation = translation*100
-
-
-        rotation = translation*100*math.pi/180
-
-        if 'open' in self.command_list:
-            aperture = 0.3
-
-        if 'close' in self.command_list:
-            aperture = 0.05
-
-
-        inc = {'rad': rotation, 'translate': translation, 'aperture':aperture}
-
+        if self.step_size == 'small':
+            inc = {'rad': self.small_rad, 'translate': self.small_translate}
+        if self.step_size == 'medium':
+            inc = {'rad': self.medium_rad, 'translate': self.medium_translate}
+        if self.step_size == 'big':
+            inc = {'rad': self.big_rad, 'translate': self.big_translate}
         return inc
 
     def print_commands(self):
@@ -132,11 +101,6 @@ class GetVoiceCommands:
         print(' "quit"   : QUIT AND CLOSE NODE            ')
         print('                                           ')
         print('-------------------------------------------')
-        print(self.voice_command)
-        print(self.command_list)
-        if self.command_list:
-            if 'meter' in self.command_list or 'm' in self.command_list or 'M' in self.command_list:
-                print('I heard you say the word meter')
 
     def get_command(self):
         """
@@ -146,60 +110,24 @@ class GetVoiceCommands:
         :returns command: A dictionary type that contains the type of base motion.
         """
         command = None
-        if self.voice_command and self.command_list:
-            if 'base' in self.command_list:
-                if 'forward' in self.command_list:
-                    command = {'joint': 'translate_mobile_base', 'inc': self.get_inc()['translate']}
-                if 'back' in self.command_list:
-                    command = {'joint': 'translate_mobile_base', 'inc': -self.get_inc()['translate']}
-                if 'left' in self.command_list:
-                    command = {'joint': 'rotate_mobile_base', 'inc': self.get_inc()['rad']}
-                if 'right' in self.command_list:
-                    command = {'joint': 'rotate_mobile_base', 'inc': -self.get_inc()['rad']}
-
-            if 'I\'m' or 'arm' in self.command_list:
-                if 'retract' in self.command_list:
-                    command = {'joint': 'wrist_extension', 'inc': -self.get_inc()['translate']}
-                if 'extend' in self.command_list:
-                    command = {'joint': 'wrist_extension', 'inc': self.get_inc()['translate']}
-
-            if 'lift' in self.command_list:
-                if 'up' in self.command_list:
-                    command = {'joint': 'joint_lift', 'inc': -self.get_inc()['translate']}
-                if 'down' in self.command_list:
-                    command = {'joint': 'joint_lift', 'inc': self.get_inc()['translate']}
-
-            if 'wrist' or 'rest' or 'risk' in self.command_list:
-                if 'up' in self.command_list:
-                    command = {'joint': 'wrist_up', 'inc': self.get_inc()['rad']}
-                if 'down' in self.command_list:
-                    command = {'joint': 'wrist_up', 'inc': -self.get_inc()['rad']}
-                if 'left' in self.command_list:
-                    command = {'joint': 'wrist_left', 'inc': self.get_inc()['rad']}
-                if 'right' in self.command_list:
-                    command = {'joint': 'wrist_left', 'inc': -self.get_inc()['rad']}
-
-                if 'counter' in self.command_list:
-                    command = {'joint': 'wrist_rotate', 'inc': -self.get_inc()['rad']}
-                if 'twist' or 'roll' in self.command_list:
-                    command = {'joint': 'wrist_rotate', 'inc': self.get_inc()['rad']}
-
-            if 'grip' in self.command_list:
-                command = {'joint': 'grip', 'inc': self.get_inc()['aperture']}
-
-
-
-        '''if (self.voice_command == "small") or (self.voice_command == "medium") or (self.voice_command == "big"):
+        if self.voice_command == 'forward':
+            command = {'joint': 'translate_mobile_base', 'inc': self.get_inc()['translate']}
+        if self.voice_command == 'back':
+            command = {'joint': 'translate_mobile_base', 'inc': -self.get_inc()['translate']}
+        if self.voice_command == 'left':
+            command = {'joint': 'rotate_mobile_base', 'inc': self.get_inc()['rad']}
+        if self.voice_command == 'right':
+            command = {'joint': 'rotate_mobile_base', 'inc': -self.get_inc()['rad']}
+        if self.voice_command == 'stretch':
+            command = {'joint': 'rotate_mobile_base', 'inc': self.sound_direction}
+        if (self.voice_command == "small") or (self.voice_command == "medium") or (self.voice_command == "big"):
             self.step_size = self.voice_command
-            rospy.loginfo('Step size = {0}'.format(self.step_size))'''
-
+            rospy.loginfo('Step size = {0}'.format(self.step_size))
         if self.voice_command == 'quit':
             rospy.signal_shutdown("done")
             sys.exit(0)
 
         self.voice_command = None
-        self.command_list = None
-
         return command
 
 
@@ -217,10 +145,7 @@ class VoiceTeleopNode(hm.HelloNode):
         hm.HelloNode.__init__(self)
         self.rate = 10.0
         self.joint_state = None
-        self.joint_states_lock = threading.Lock()
         self.speech = GetVoiceCommands()
-        self.move_base = nv.MoveBase(self)
-
 
     def joint_states_callback(self, msg):
         """
@@ -238,55 +163,24 @@ class VoiceTeleopNode(hm.HelloNode):
         """
         joint_state = self.joint_state
         if (joint_state is not None) and (command is not None):
+            point = JointTrajectoryPoint()
+            point.time_from_start = rospy.Duration(0.0)
+            trajectory_goal = FollowJointTrajectoryGoal()
+            trajectory_goal.goal_time_tolerance = rospy.Time(1.0)
+            joint_name = command['joint']
+            trajectory_goal.trajectory.joint_names = [joint_name]
 
             inc = command['inc']
             rospy.loginfo('inc = {0}'.format(inc))
             new_value = inc
-            joint_name = command['joint']
 
-            if joint_name == 'translate_mobile_base':
-                pose = {'translate_mobile_base': new_value}
-                self.move_to_pose(pose)
-                rospy.sleep(1.0)
-
-            if joint_name == 'rotate_mobile_base':
-                pose = {'rotate_mobile_base': new_value}
-                self.move_to_pose(pose)
-                rospy.sleep(1.0)
-
-            if joint_name == 'joint_lift':
-                with self.joint_states_lock:
-                    i = self.joint_state.name.index('joint_lift')
-                    lift_position = self.joint_state.position[i]
-                new_lift_position = lift_position - new_value
-                pose = {'joint_lift': new_lift_position}
-                self.move_to_pose(pose)
-
-            if joint_name == 'wrist_extension':
-                max_extension_m = 0.5
-                with self.joint_states_lock:
-                    wrist_position, wrist_velocity, wrist_effort = hm.get_wrist_state(self.joint_state)
-                extension_m = wrist_position + new_value
-                extension_m = min(extension_m, max_extension_m)
-                extension_contact_effort = 45.0
-                pose = {'wrist_extension': (extension_m, extension_contact_effort)}
-                self.move_to_pose(pose, custom_contact_thresholds=True)
-
-            if joint_name == 'grip':
-                pose = {'gripper_aperture': new_value}
-                self.move_to_pose(pose)
-
-            if joint_name == 'wrist_up':
-                pose = {'joint_wrist_pitch': new_value}
-                self.move_to_pose(pose)
-
-            if joint_name == 'wrist_left':
-                pose = {'joint_wrist_yaw': new_value}
-                self.move_to_pose(pose)
-
-            if joint_name == 'wrist_rotate':
-                pose = {'joint_wrist_roll': new_value}
-                self.move_to_pose(pose)
+            point.positions = [new_value]
+            trajectory_goal.trajectory.points = [point]
+            trajectory_goal.trajectory.header.stamp = rospy.Time.now()
+            rospy.loginfo('joint_name = {0}, trajectory_goal = {1}'.format(joint_name, trajectory_goal))
+            self.trajectory_client.send_goal(trajectory_goal)
+            rospy.loginfo('Done sending command.')
+            self.speech.print_commands()
 
     def main(self):
         """
