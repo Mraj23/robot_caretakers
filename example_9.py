@@ -96,10 +96,10 @@ class GetVoiceCommands:
 
         rotation = translation*100*math.pi/180
         if 'open' in self.command_list:
-            aperture = 0.3
+            aperture = -0.35
 
         if 'close' in self.command_list:
-            aperture = 0.05
+            aperture = 0.165
 
 
         inc = {'rad': rotation, 'translate': translation, 'aperture':aperture}
@@ -270,17 +270,17 @@ class VoiceTeleopNode(hm.HelloNode):
                 self.move_to_pose(pose, custom_contact_thresholds=True)
 
             if joint_name == 'grip':
-                pose = {'gripper_aperture': new_value}
+                pose = {'joint_gripper_finger_left': new_value}
                 self.move_to_pose(pose)
 
             if joint_name == 'wrist_pitch':
                 pose = {'joint_wrist_pitch': new_value}
                 self.move_to_pose(pose)
-            
+
             if joint_name == 'wrist_yaw':
                 pose = {'joint_wrist_yaw': new_value}
                 self.move_to_pose(pose)
-            
+
             if joint_name == 'wrist_roll':
                 pose = {'joint_wrist_roll': new_value}
                 self.move_to_pose(pose)
