@@ -181,7 +181,7 @@ class GetVoiceCommands:
                 if 'roll' in self.command_list:
                     command = {'joint': 'wrist_roll', 'inc': self.get_inc()['rad']}
 
-            if ('grip' in self.command_list) or ('rip' in self.command_list):
+            if ('grip' in self.command_list) or ('rip' in self.command_list) or ('gripper' in self.command_list):
                 command = {'joint': 'grip', 'inc': self.get_inc()['aperture']}
 
 
