@@ -169,13 +169,13 @@ class GetVoiceCommands:
 
             if 'wrist' in self.command_list:
                 if 'up' in self.command_list:
-                    command = {'joint': 'wrist_pitch', 'inc': self.get_inc()['translate']}
+                    command = {'joint': 'wrist_pitch', 'inc': self.get_inc()['rad']}
                 if 'down' in self.command_list:
-                    command = {'joint': 'wrist_pitch', 'inc': -self.get_inc()['translate']}
+                    command = {'joint': 'wrist_pitch', 'inc': -self.get_inc()['rad']}
                 if 'left' in self.command_list:
-                    command = {'joint': 'wrist_yaw', 'inc': self.get_inc()['translate']}
+                    command = {'joint': 'wrist_yaw', 'inc': self.get_inc()['rad']}
                 if 'right' in self.command_list:
-                    command = {'joint': 'wrist_yaw', 'inc': -self.get_inc()['translate']}
+                    command = {'joint': 'wrist_yaw', 'inc': -self.get_inc()['rad']}
                 if 'counter' in self.command_list:
                     command = {'joint': 'wrist_roll', 'inc': -self.get_inc()['rad']}
                 if 'counter' not in self.command_list:
@@ -276,11 +276,11 @@ class VoiceTeleopNode(hm.HelloNode):
             if joint_name == 'wrist_pitch':
                 pose = {'joint_wrist_pitch': new_value}
                 self.move_to_pose(pose)
-            
+
             if joint_name == 'wrist_yaw':
                 pose = {'joint_wrist_yaw': new_value}
                 self.move_to_pose(pose)
-            
+
             if joint_name == 'wrist_roll':
                 pose = {'joint_wrist_roll': new_value}
                 self.move_to_pose(pose)
