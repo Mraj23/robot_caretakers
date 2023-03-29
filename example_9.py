@@ -234,6 +234,7 @@ class VoiceTeleopNode(hm.HelloNode):
         :param command: A dictionary type.
         """
         joint_state = self.joint_state
+        print(joint_state)
         if (joint_state is not None) and (command is not None):
 
             inc = command['inc']
