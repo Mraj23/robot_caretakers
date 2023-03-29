@@ -15,6 +15,7 @@ import hello_helpers.hello_misc as hm
 import stretch_funmap.navigate as nv
 from speech_recognition_msgs.msg import SpeechRecognitionCandidates
 import json
+from frozendict import frozendict
 
 
 
@@ -289,7 +290,8 @@ class VoiceTeleopNode(hm.HelloNode):
                 self.move_to_pose(pose)
             
             if 'save' in command:
-                self.save_positions[command['save']] = joint_state
+                self.save_positions[command['save']] = frozendict(joint_state)
+                print(type(joint_state))
                 json_object = json.dumps(self.save_positions)
  
                 # Writing to sample.json
