@@ -14,7 +14,7 @@ from trajectory_msgs.msg import JointTrajectoryPoint
 import hello_helpers.hello_misc as hm
 import stretch_funmap.navigate as nv
 from speech_recognition_msgs.msg import SpeechRecognitionCandidates
-
+import json
 
 
 
@@ -217,6 +217,7 @@ class VoiceTeleopNode(hm.HelloNode):
         self.joint_states_lock = threading.Lock()
         self.speech = GetVoiceCommands()
         self.move_base = nv.MoveBase(self)
+        self.save_positions = dict()
 
 
     def joint_states_callback(self, msg):
@@ -234,7 +235,7 @@ class VoiceTeleopNode(hm.HelloNode):
         :param command: A dictionary type.
         """
         joint_state = self.joint_state
-        print(joint_state)
+       
         if (joint_state is not None) and (command is not None):
 
             inc = command['inc']
@@ -285,6 +286,15 @@ class VoiceTeleopNode(hm.HelloNode):
             if joint_name == 'wrist_roll':
                 pose = {'joint_wrist_roll': new_value}
                 self.move_to_pose(pose)
+            
+            if 'save' in command:
+                self.save_positions[command['save']] = joint_state
+                json_object = json.dumps(self.save_positions)
+ 
+                # Writing to sample.json
+                with open("sample.json", "w") as outfile:
+                    outfile.write(json_object)
+                                
 
     def main(self):
         """
