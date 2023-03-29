@@ -185,7 +185,7 @@ class GetVoiceCommands:
                 command = {'joint': 'grip', 'inc': self.get_inc()['aperture']}
 
             if 'save' in self.command_list:
-                command = {'save' : self.command_list[-1]}
+                command = {'save' : self.command_list[-1], 'inc': 0, 'joint' : None}
 
         '''if (self.voice_command == "small") or (self.voice_command == "medium") or (self.voice_command == "big"):
             self.step_size = self.voice_command
