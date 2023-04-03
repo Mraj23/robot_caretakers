@@ -318,14 +318,16 @@ class VoiceTeleopNode(hm.HelloNode):
             if 'run' in command:
                 
                 filename = command['name']
+                print(filename)
                 file_list = os.listdir('poses/')
+                print(file_list)
                 file_list = map(lambda x:x.split('.')[0], file_list) 
                 print(file_list)
                 if filename in file_list:
                     with open(f'poses/{filename}.json') as json_file:
                         pose = json.load(json_file)
                     self.move_to_pose(pose)
-                    
+                
                     
 
     def main(self):
