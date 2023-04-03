@@ -321,7 +321,7 @@ class VoiceTeleopNode(hm.HelloNode):
                 print(filename)
                 file_list = os.listdir('poses/')
                 print(file_list)
-                file_list = map(lambda x:x.split('.')[0], file_list) 
+                file_list = list(map(lambda x:x.split('.')[0], file_list)) 
                 print(file_list)
                 if filename in file_list:
                     with open(f'poses/{filename}.json') as json_file:
