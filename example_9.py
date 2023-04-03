@@ -242,7 +242,7 @@ class VoiceTeleopNode(hm.HelloNode):
         :param command: A dictionary type.
         """
         joint_state = self.joint_state
-       
+
         if (joint_state is not None) and (command is not None):
 
             inc = command['inc']
@@ -293,7 +293,7 @@ class VoiceTeleopNode(hm.HelloNode):
             if joint_name == 'wrist_roll':
                 pose = {'joint_wrist_roll': new_value}
                 self.move_to_pose(pose)
-            
+
             if 'save' in command:
                 print(type(joint_state))
                 print(joint_state)
@@ -303,11 +303,11 @@ class VoiceTeleopNode(hm.HelloNode):
                 print('position ***************************')
                 print(joint_state.position)
                 print(type(joint_state.position))
-                
+
                 joint_state_dict = dict()
                 for idx, elem in enumerate(joint_state.name):
-                    joint_state_dict[elem] = joint_state.position[idx] 
-                
+                    joint_state_dict[elem] = joint_state.position[idx]
+
                 json_object = json.dumps(joint_state_dict)
 
                 # Writing to sample.json
