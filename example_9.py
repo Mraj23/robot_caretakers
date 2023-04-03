@@ -292,8 +292,12 @@ class VoiceTeleopNode(hm.HelloNode):
             if 'save' in command:
                 print(type(joint_state))
                 print(joint_state)
+                print('name ***************************')
                 print(joint_state.name)
+                print(type(joint_state.name))
+                print('position ***************************')
                 print(joint_state.position)
+                print(type(joint_state.position))
                 
                 
                 json_object = json.dumps(joint_state)
