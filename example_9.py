@@ -299,8 +299,11 @@ class VoiceTeleopNode(hm.HelloNode):
                 print(joint_state.position)
                 print(type(joint_state.position))
                 
+                joint_state_dict = dict()
+                for idx, elem in enumerate(joint_state.name):
+                    joint_state_dict[elem] = joint_state.position[idx] 
                 
-                json_object = json.dumps(joint_state)
+                json_object = json.dumps(joint_state_dict)
 
                 # Writing to sample.json
                 name = command['save']
