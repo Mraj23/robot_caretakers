@@ -6,6 +6,7 @@ import sys
 import math
 import actionlib
 import threading
+import os
 
 from sensor_msgs.msg import JointState
 from std_msgs.msg import Int32
@@ -307,7 +308,7 @@ class VoiceTeleopNode(hm.HelloNode):
 
                 # Writing to sample.json
                 name = command['save']
-                with open(f'{name}.json', "w") as outfile:
+                with open(f'/poses/{name}.json', "w") as outfile:
                     outfile.write(json_object)
                     
 
