@@ -315,7 +315,7 @@ class VoiceTeleopNode(hm.HelloNode):
                 with open(f'poses/{name}.json', "w") as outfile:
                     outfile.write(json_object)
             
-            if 'run' in command:
+            if 'name' in command:
                 
                 filename = command['name']
                 print(filename)
