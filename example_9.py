@@ -312,7 +312,7 @@ class VoiceTeleopNode(hm.HelloNode):
 
                 # Writing to sample.json
                 name = command['save']
-                with open(f'~/poses/{name}.json', "w") as outfile:
+                with open(f'poses/{name}.json', "w") as outfile:
                     outfile.write(json_object)
             
             if 'run' in command:
