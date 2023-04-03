@@ -188,6 +188,10 @@ class GetVoiceCommands:
 
             if 'save' in self.command_list:
                 command = {'save' : self.command_list[-1], 'inc': 0, 'joint' : None}
+            
+            if 'run' in self.command_list:
+                command = {'name' : self.command_list[-1], 'inc': 0, 'joint' : None}
+
 
         '''if (self.voice_command == "small") or (self.voice_command == "medium") or (self.voice_command == "big"):
             self.step_size = self.voice_command
@@ -308,8 +312,20 @@ class VoiceTeleopNode(hm.HelloNode):
 
                 # Writing to sample.json
                 name = command['save']
-                with open(f'/poses/{name}.json', "w") as outfile:
+                with open(f'~/poses/{name}.json', "w") as outfile:
                     outfile.write(json_object)
+            
+            if 'run' in command:
+                
+                filename = command['name']
+                file_list = os.listdir('poses/')
+                file_list = map(lambda x:x.split('.')[0], file_list) 
+                print(file_list)
+                if filename in file_list:
+                    with open(f'poses/{filename}.json') as json_file:
+                        pose = json.load(json_file)
+                    self.move_to_pose(pose)
+                    
                     
 
     def main(self):
