@@ -292,11 +292,12 @@ class VoiceTeleopNode(hm.HelloNode):
             if 'save' in command:
                 print(type(joint_state))
                 print(joint_state)
-                
+                print(joint_state.name)
+                print(joint_state.position)
                 
                 
                 json_object = json.dumps(joint_state)
- 
+
                 # Writing to sample.json
                 name = command['save']
                 with open(f'{name}.json', "w") as outfile:
