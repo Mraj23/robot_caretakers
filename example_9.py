@@ -290,14 +290,18 @@ class VoiceTeleopNode(hm.HelloNode):
                 self.move_to_pose(pose)
             
             if 'save' in command:
-                self.save_positions[command['save']] = frozendict(joint_state)
                 print(type(joint_state))
-                json_object = json.dumps(self.save_positions)
+                print(joint_state)
+                
+                
+                
+                json_object = json.dumps(joint_state)
  
                 # Writing to sample.json
-                with open("sample.json", "w") as outfile:
+                name = command['save']
+                with open(f'{name}.json', "w") as outfile:
                     outfile.write(json_object)
-                                
+                    
 
     def main(self):
         """
