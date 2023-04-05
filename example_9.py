@@ -328,8 +328,13 @@ class VoiceTeleopNode(hm.HelloNode):
                         pose = json.load(json_file)
                         print(pose)
                         for key in pose:
-                            new_pose = {key: pose[key]}
-                            self.move_to_pose(new_pose)
+                            if key == 'gripper_aperture':
+                                print("here")
+                                continue
+                            else:
+                                new_pose = {key: pose[key]}
+                                print(new_pose)
+                                self.move_to_pose(new_pose)
 
 
 
