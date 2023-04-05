@@ -188,7 +188,7 @@ class GetVoiceCommands:
 
             if 'save' in self.command_list:
                 command = {'save' : self.command_list[-1], 'inc': 0, 'joint' : None}
-            
+
             if 'run' in self.command_list:
                 command = {'run' : self.command_list[-1], 'inc': 0, 'joint' : None}
 
@@ -314,21 +314,22 @@ class VoiceTeleopNode(hm.HelloNode):
                 name = command['save']
                 with open(f'poses/{name}.json', "w") as outfile:
                     outfile.write(json_object)
-            
+
             if 'run' in command:
-                
+
                 filename = command['run']
                 print(filename)
                 file_list = os.listdir('poses/')
                 print(file_list)
-                file_list = list(map(lambda x:x.split('.')[0], file_list)) 
+                file_list = list(map(lambda x:x.split('.')[0], file_list))
                 print(file_list)
                 if filename in file_list:
                     with open(f'poses/{filename}.json') as json_file:
                         pose = json.load(json_file)
+                        print(pose)
                     self.move_to_pose(pose)
-                
-                    
+
+
 
     def main(self):
         """
