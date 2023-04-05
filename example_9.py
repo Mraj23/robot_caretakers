@@ -108,6 +108,20 @@ class GetVoiceCommands:
 
         return inc
 
+
+    def user_define_inc(self):
+
+        rotation = self.medium_rad
+        translation = 5
+        aperture = self.aperture
+
+
+        inc = {'rad': rotation, 'translate': translation, 'aperture':aperture}
+
+        return inc
+
+
+
     def print_commands(self):
         """
         A function that prints the voice teleoperation menu.
@@ -146,7 +160,19 @@ class GetVoiceCommands:
         :returns command: A dictionary type that contains the type of base motion.
         """
         command = None
+        keep_moving_flag = False
+        keep_moving_joint = None
         if self.voice_command and self.command_list:
+
+            if ("keep" in self.command_list) and ("moving" in self.command_list):
+                keep_moving_flag = True
+
+            if keep_moving_flag and ("stop" in self.command_list):
+                command = {'joint': keep_moving_joint, 'inc' = 0}
+
+
+
+
             if ('base' in self.command_list) or ('face' in self.command_list) or ('space' in self.command_list) or ('Face' in self.command_list):
                 if ('forward' in self.command_list) or ('Forward' in self.command_list):
                     command = {'joint': 'translate_mobile_base', 'inc': self.get_inc()['translate']}
@@ -196,6 +222,13 @@ class GetVoiceCommands:
         '''if (self.voice_command == "small") or (self.voice_command == "medium") or (self.voice_command == "big"):
             self.step_size = self.voice_command
             rospy.loginfo('Step size = {0}'.format(self.step_size))'''
+
+
+
+            if keep_moving_flag:
+                command['inc'] = self.user_define_inc()
+                keep_moving_joint = command['joint']
+
 
         if self.voice_command == 'quit':
             rospy.signal_shutdown("done")
@@ -266,8 +299,11 @@ class VoiceTeleopNode(hm.HelloNode):
                     lift_position = self.joint_state.position[i]
                 new_lift_position = lift_position - new_value
                 pose = {'joint_lift': new_lift_position}
-                print("normal", pose)
+                print("old position", lift_position)
+                print("move by value", new_value)
+                print("before move, expect pose", pose)
                 self.move_to_pose(pose)
+                print("after move joint state position", self.joint_state.position[i])
 
             if joint_name == 'wrist_extension':
                 max_extension_m = 0.5
