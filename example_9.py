@@ -266,6 +266,7 @@ class VoiceTeleopNode(hm.HelloNode):
                     lift_position = self.joint_state.position[i]
                 new_lift_position = lift_position - new_value
                 pose = {'joint_lift': new_lift_position}
+                print("normal", pose)
                 self.move_to_pose(pose)
 
             if joint_name == 'wrist_extension':
