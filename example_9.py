@@ -327,7 +327,10 @@ class VoiceTeleopNode(hm.HelloNode):
                     with open(f'poses/{filename}.json') as json_file:
                         pose = json.load(json_file)
                         print(pose)
-                    self.move_to_pose(pose)
+                        for key in pose:
+                            new_pose = {key: pose[key]}
+                            self.move_to_pose(new_pose)
+
 
 
 
