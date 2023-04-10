@@ -204,7 +204,7 @@ class GetVoiceCommands:
             if ('I\'m' in self.command_list) or ('arm' in self.command_list) or ('army' in self.command_list):
                 if ('retract' in self.command_list) or ('tract' in self.command_list) or ('tracted' in self.command_list):
                     command = {'joint': 'wrist_extension', 'inc': -self.get_inc()['translate']}
-                if 'extend' in self.command_list:
+                if ('extend' in self.command_list) or ('extended' in self.command_list):
                     command = {'joint': 'wrist_extension', 'inc': self.get_inc()['translate']}
 
             if ('lift' in self.command_list) or ('Lyft' in self.command_list) or ('left' in self.command_list):
