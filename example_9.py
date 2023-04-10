@@ -231,12 +231,6 @@ class GetVoiceCommands:
                 command = {'run' : self.command_list[-1], 'inc': 0, 'joint' : None}
 
 
-        '''if (self.voice_command == "small") or (self.voice_command == "medium") or (self.voice_command == "big"):
-            self.step_size = self.voice_command
-            rospy.loginfo('Step size = {0}'.format(self.step_size))'''
-
-
-
             if self.keep_moving_flag:
                 command['inc'] = self.user_define_inc()
                 self.keep_moving_joint = command['joint']
