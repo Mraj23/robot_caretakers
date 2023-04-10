@@ -232,7 +232,7 @@ class GetVoiceCommands:
 
 
             if self.keep_moving_flag:
-                command['inc'] = self.user_define_inc()
+                command['inc'] = 0.1
                 self.keep_moving_joint = command['joint']
 
 
