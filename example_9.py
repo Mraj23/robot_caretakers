@@ -171,7 +171,7 @@ class GetVoiceCommands:
                 self.keep_moving_flag = False
                 self.voice_command = None
                 self.command_list = None
-                print("I heard stop")
+                print("I heard stop \n \n \n \n \n \n")
                 return command
 
 
