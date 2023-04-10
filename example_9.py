@@ -176,7 +176,7 @@ class GetVoiceCommands:
 
 
 
-            if self.keep_moving_flag: return None
+            if self.keep_moving_flag: return {}
 
             if ("keep" in self.command_list) and ("moving" in self.command_list):
                 self.keep_moving_flag = True
