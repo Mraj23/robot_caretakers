@@ -51,6 +51,9 @@ class GetVoiceCommands:
 
         self.voice_command = None
         self.command_list = None
+
+        self.keep_moving_joint = None
+        self.keep_moving_flag = False
         self.sound_direction = 0
         self.speech_to_text_sub  = rospy.Subscriber("/speech_to_text",  SpeechRecognitionCandidates, self.callback_speech)
         self.sound_direction_sub = rospy.Subscriber("/sound_direction", Int32,                       self.callback_direction)
@@ -160,15 +163,25 @@ class GetVoiceCommands:
         :returns command: A dictionary type that contains the type of base motion.
         """
         command = None
-        keep_moving_flag = False
-        keep_moving_joint = None
-        if self.voice_command and self.command_list:
+
+
+        if (self.voice_command and self.command_list) or self.keep_moving_flag:
+            if self.keep_moving_flag and ("stop" in self.command_list):
+                command = {'joint': self.keep_moving_joint, 'inc' = 0}
+                self.keep_moving_flag = False
+
+            if self.keep_moving_flag:
+                command = {'joint': self.keep_moving_joint, 'inc': self.user_define_inc()}
+                self.voice_command = None
+                self.command_list = None
+                return command
+
+
 
             if ("keep" in self.command_list) and ("moving" in self.command_list):
-                keep_moving_flag = True
+                self.keep_moving_flag = True
 
-            if keep_moving_flag and ("stop" in self.command_list):
-                command = {'joint': keep_moving_joint, 'inc' = 0}
+
 
 
 
@@ -225,9 +238,9 @@ class GetVoiceCommands:
 
 
 
-            if keep_moving_flag:
+            if self.keep_moving_flag:
                 command['inc'] = self.user_define_inc()
-                keep_moving_joint = command['joint']
+                self.keep_moving_joint = command['joint']
 
 
         if self.voice_command == 'quit':
