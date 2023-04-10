@@ -169,6 +169,9 @@ class GetVoiceCommands:
             if self.keep_moving_flag and ("stop" in self.command_list):
                 command = {'joint': self.keep_moving_joint, 'inc' = 0}
                 self.keep_moving_flag = False
+                self.voice_command = None
+                self.command_list = None
+                return command
 
 
 
