@@ -170,11 +170,7 @@ class GetVoiceCommands:
                 command = {'joint': self.keep_moving_joint, 'inc' = 0}
                 self.keep_moving_flag = False
 
-            if self.keep_moving_flag:
-                command = {'joint': self.keep_moving_joint, 'inc': self.user_define_inc()}
-                self.voice_command = None
-                self.command_list = None
-                return command
+
 
 
 
@@ -399,6 +395,8 @@ class VoiceTeleopNode(hm.HelloNode):
 
         while not rospy.is_shutdown():
             command = self.speech.get_command()
+            if self.speech.keep_moving_flag:
+                command = {'joint': self.speech.keep_moving_joint, 'inc': self.speech.user_define_inc()}
             self.send_command(command)
             rate.sleep()
 
