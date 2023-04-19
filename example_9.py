@@ -99,6 +99,12 @@ class GetVoiceCommands:
         translation = translation/100
         if 'meter' in self.command_list or 'm' in self.command_list or 'M' in self.command_list:
             translation = translation*100
+        
+        if 'feet' in self.command_list:
+            translation = translation*30.48
+        
+        if 'inches' in self.command_list:
+            translation *= 2.54
 
         rotation = translation*100*math.pi/180
         if 'open' in self.command_list:
@@ -186,10 +192,6 @@ class GetVoiceCommands:
 
             if ("keep" in self.command_list or "keeps" in self.command_list) and ("moving" in self.command_list):
                 self.keep_moving_flag = True
-
-
-
-
 
 
             if ('base' in self.command_list) or ('face' in self.command_list) or ('space' in self.command_list) or ('Face' in self.command_list) or ('bass' in self.command_list):
