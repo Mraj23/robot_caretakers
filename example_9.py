@@ -198,7 +198,7 @@ class GetVoiceCommands:
                     command = {'joint': 'translate_mobile_base', 'inc': -self.get_inc()['translate']}
                 if 'left' in self.command_list:
                     command = {'joint': 'rotate_mobile_base', 'inc': self.get_inc()['rad']}
-                if 'right' in self.command_list:
+                if ('right' in self.command_list) or ('write' in self.command_list):
                     command = {'joint': 'rotate_mobile_base', 'inc': -self.get_inc()['rad']}
 
             if ('I\'m' in self.command_list) or ('arm' in self.command_list) or ('army' in self.command_list):
@@ -399,7 +399,8 @@ class VoiceTeleopNode(hm.HelloNode):
         while not rospy.is_shutdown():
             command = self.speech.get_command()
             if self.speech.keep_moving_flag:
-                command = {'joint': self.speech.keep_moving_joint, 'inc': 0.05}
+                currinc = command['inc']
+                command = {'joint': self.speech.keep_moving_joint, 'inc': currinc + 0.05}
             self.send_command(command)
             rate.sleep()
 
