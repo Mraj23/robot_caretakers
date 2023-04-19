@@ -377,7 +377,6 @@ class VoiceTeleopNode(hm.HelloNode):
                         pose = json.load(json_file)
                         print(pose)
                         for key in pose:
-                            #if key == 'joint_lift':
                             new_pose = {key: pose[key]}
                             print(new_pose)
                             self.move_to_pose(new_pose)
@@ -400,6 +399,12 @@ class VoiceTeleopNode(hm.HelloNode):
             command = self.speech.get_command()
             if self.speech.keep_moving_flag:
                 command = {'joint': self.speech.keep_moving_joint, 'inc': 0.05}
+                if self.speech.keep_moving_joint == 'joint_lift':
+                    command['inc'] = 0.03
+                elif self.speech.keep_moving_joint == 'translate_mobile_base' or self.speech.keep_moving_joint == 'rotate_mobile_base' :
+                    command['inc'] = 0.1
+                elif self.speech.keep_moving_joint == 'wrist_extension':
+                    command['inc'] = 0.03
             self.send_command(command)
             rate.sleep()
 
