@@ -183,7 +183,7 @@ class GetVoiceCommands:
                 self.command_list = None
                 return command
 
-            if ("keep" in self.command_list) and ("moving" in self.command_list):
+            if ("keep" in self.command_list or "keeps" in self.command_list) and ("moving" in self.command_list):
                 self.keep_moving_flag = True
 
 
@@ -191,7 +191,7 @@ class GetVoiceCommands:
 
 
 
-            if ('base' in self.command_list) or ('face' in self.command_list) or ('space' in self.command_list) or ('Face' in self.command_list):
+            if ('base' in self.command_list) or ('face' in self.command_list) or ('space' in self.command_list) or ('Face' in self.command_list) or ('bass' in self.command_list):
                 if ('forward' in self.command_list) or ('Forward' in self.command_list):
                     command = {'joint': 'translate_mobile_base', 'inc': self.get_inc()['translate']}
                 if 'back' in self.command_list:
@@ -404,7 +404,7 @@ class VoiceTeleopNode(hm.HelloNode):
                 elif self.speech.keep_moving_joint == 'translate_mobile_base' or self.speech.keep_moving_joint == 'rotate_mobile_base' :
                     command['inc'] = 0.1
                 elif self.speech.keep_moving_joint == 'wrist_extension':
-                    command['inc'] = 0.03
+                    command['inc'] = 0.05
             self.send_command(command)
             rate.sleep()
 
