@@ -400,6 +400,7 @@ class VoiceTeleopNode(hm.HelloNode):
             command = self.speech.get_command()
             if self.speech.keep_moving_flag:
                 currinc = command['inc']
+                print("current inc", currinc)
                 command = {'joint': self.speech.keep_moving_joint, 'inc': currinc + 0.05}
             self.send_command(command)
             rate.sleep()
