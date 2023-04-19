@@ -103,7 +103,7 @@ class GetVoiceCommands:
         if 'feet' in self.command_list:
             translation = translation*30.48
 
-        if 'inches' in self.command_list:
+        if 'inches' in self.command_list or 'in' in self.command_list:
             translation *= 2.54
 
         rotation = translation*100*math.pi/180
