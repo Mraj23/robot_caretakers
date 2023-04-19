@@ -406,9 +406,9 @@ class VoiceTeleopNode(hm.HelloNode):
                 if self.speech.keep_moving_joint == 'joint_lift':
                     command['inc'] = -0.03 if self.speech.inc_negative == False else 0.03
                 elif self.speech.keep_moving_joint == 'translate_mobile_base' or self.speech.keep_moving_joint == 'rotate_mobile_base' :
-                    command['inc'] = 0.1 if self.inc_negative == False else -0.1
+                    command['inc'] = 0.1 if self.speech.inc_negative == False else -0.1
                 elif self.speech.keep_moving_joint == 'wrist_extension':
-                    command['inc'] = 0.05 if self.inc_negative == False else -0.05
+                    command['inc'] = 0.05 if self.speech.inc_negative == False else -0.05
             self.send_command(command)
             rate.sleep()
 
