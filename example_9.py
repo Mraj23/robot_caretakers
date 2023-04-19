@@ -99,10 +99,10 @@ class GetVoiceCommands:
         translation = translation/100
         if 'meter' in self.command_list or 'm' in self.command_list or 'M' in self.command_list:
             translation = translation*100
-        
+
         if 'feet' in self.command_list:
             translation = translation*30.48
-        
+
         if 'inches' in self.command_list:
             translation *= 2.54
 
@@ -205,7 +205,7 @@ class GetVoiceCommands:
                 if ('right' in self.command_list) or ('write' in self.command_list):
                     command = {'joint': 'rotate_mobile_base', 'inc': -self.get_inc()['rad']}
 
-            if ('I\'m' in self.command_list) or ('arm' in self.command_list) or ('army' in self.command_list):
+            if ('I\'m' in self.command_list) or ('arm' in self.command_list) or ('army' in self.command_list) or ('arms' in self.command_list):
                 if ('retract' in self.command_list) or ('tract' in self.command_list) or ('tracted' in self.command_list):
                     command = {'joint': 'wrist_extension', 'inc': -self.get_inc()['translate']}
                     self.inc_negative = True
