@@ -54,6 +54,7 @@ class GetVoiceCommands:
 
         self.keep_moving_joint = None
         self.keep_moving_flag = False
+        self.inc_negative = False
         self.sound_direction = 0
         self.speech_to_text_sub  = rospy.Subscriber("/speech_to_text",  SpeechRecognitionCandidates, self.callback_speech)
         self.sound_direction_sub = rospy.Subscriber("/sound_direction", Int32,                       self.callback_direction)
@@ -196,6 +197,7 @@ class GetVoiceCommands:
                     command = {'joint': 'translate_mobile_base', 'inc': self.get_inc()['translate']}
                 if 'back' in self.command_list:
                     command = {'joint': 'translate_mobile_base', 'inc': -self.get_inc()['translate']}
+                    self.inc_negative = True
                 if 'left' in self.command_list:
                     command = {'joint': 'rotate_mobile_base', 'inc': self.get_inc()['rad']}
                 if ('right' in self.command_list) or ('write' in self.command_list):
@@ -204,6 +206,8 @@ class GetVoiceCommands:
             if ('I\'m' in self.command_list) or ('arm' in self.command_list) or ('army' in self.command_list):
                 if ('retract' in self.command_list) or ('tract' in self.command_list) or ('tracted' in self.command_list):
                     command = {'joint': 'wrist_extension', 'inc': -self.get_inc()['translate']}
+                    self.inc_negative = True
+
                 if ('extend' in self.command_list) or ('extended' in self.command_list):
                     command = {'joint': 'wrist_extension', 'inc': self.get_inc()['translate']}
 
@@ -212,6 +216,7 @@ class GetVoiceCommands:
                     command = {'joint': 'joint_lift', 'inc': -self.get_inc()['translate']}
                 if 'down' in self.command_list:
                     command = {'joint': 'joint_lift', 'inc': self.get_inc()['translate']}
+                    self.inc_negative = True
 
             if ('wrist' in self.command_list) or ('rest' in self.command_list) or ('Chris' in self.command_list):
                 if 'up' in self.command_list:
@@ -399,11 +404,11 @@ class VoiceTeleopNode(hm.HelloNode):
             if self.speech.keep_moving_flag:
                 command = {'joint': self.speech.keep_moving_joint}
                 if self.speech.keep_moving_joint == 'joint_lift':
-                    command['inc'] = 0.03 if command['inc'] > 0 else -0.03
+                    command['inc'] = -0.03 if self.speech.inc_negative == False else 0.03
                 elif self.speech.keep_moving_joint == 'translate_mobile_base' or self.speech.keep_moving_joint == 'rotate_mobile_base' :
-                    command['inc'] = 0.1 if command['inc'] > 0 else -0.1
+                    command['inc'] = 0.1 if self.inc_negative == False else -0.1
                 elif self.speech.keep_moving_joint == 'wrist_extension':
-                    command['inc'] = 0.05 if command['inc'] > 0 else -0.05
+                    command['inc'] = 0.05 if self.inc_negative == False else -0.05
             self.send_command(command)
             rate.sleep()
 
