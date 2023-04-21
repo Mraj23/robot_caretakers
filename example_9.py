@@ -178,6 +178,7 @@ class GetVoiceCommands:
                 self.keep_moving_flag = False
                 self.voice_command = None
                 self.command_list = None
+                self.inc_negative = False
                 print("I heard stop \n \n \n \n \n \n")
                 return command
 
